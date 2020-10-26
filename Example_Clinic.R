@@ -42,13 +42,40 @@ mon_resources <- get_mon_resources(env)
 ## Calculate doctor wait times
 
 names <- colnames(mon_resources)
-df <- as_tibble(mon_resources)
+res_df <- as_tibble(mon_resources)
 
-mon_doc <- df %>%
+mon_doc <- res_df %>%
   filter(resource == 'doctor') %>%
   arrange(time) %>%
   mutate(state_time_diff=c(diff(time), 0))
 
-mon_doc_waiting <- df %>% 
+mon_doc_waiting <- mon_doc %>% 
+  filter(server == 0 & queue == 0)
+
+## Calculate nurse wait times
+mon_nurse <- res_df %>%
+  filter(resource == 'nurse') %>%
+  arrange(time) %>%
+  mutate(state_time_diff=c(diff(time), 0))
+
+mon_nurse_waiting <- mon_nurse %>% 
+  filter(server == 0 & queue == 0)
+
+# Calculate patient wait times 
+mon_pt <- mon_arrivals %>%
+  mutate(wait_time = end_time - start_time - activity_time)
+
+# Wait times df
+temp_wait_doc <- as_tibble(
+  data.frame(mon_doc_waiting$resource, mon_doc_waiting$time, mon_doc_waiting$state_time_diff))
+names(temp_wait_doc) <- c("entity", "sys_time", "wait_time")
+temp_wait_nurse <- as_tibble(
+  data.frame(mon_nurse_waiting$resource, mon_nurse_waiting$time, mon_nurse_waiting$state_time_diff))
+names(temp_wait_nurse) <- c("entity", "sys_time", "wait_time")
+temp_wait_pt <- as_tibble(
+  data.frame(mon_pt$name, mon_pt$start_time, mon_pt$wait_time)
+)
+names(temp_wait_pt) <- c("entity", "sys_time", "wait_time")
+waittimes_df <- rbind(temp_wait_doc, temp_wait_nurse, temp_wait_pt)
 
 
