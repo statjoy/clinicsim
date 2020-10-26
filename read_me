@@ -1,0 +1,26 @@
+# CLINIC SIMULATION 
+
+These steps are all happening in parallel. 
+
+#### Simulation 
+
+* r-simmer.org 
+* Most useful links have been Intro and Bank Analysis 
+* Progress to date: setting timeouts, learning how to interpret and transform get_mon_resource for resource (i.e., the doctor) wait times
+
+* Perhaps some key assumptions to hold for tomorrow's code: we have 2 doctors, 2
+
+
+* Next steps: Adding in multiple nurses, doctors. 
+**** Hold off on this: Adding in rooms (too complex?? - assume doctor = room?)
+* Coming up with a viable analysis to map onto dashboard 
+***** Currently, considering comparing "e-checkins" vs. staffing modifications?? 
+
+#### Dashboard
+* Flexdashboard with R markdown!; https://rmarkdown.rstudio.com/flexdashboard/
+* Using Shiny with FlexDashboard: https://rmarkdown.rstudio.com/flexdashboard/shiny.html
+* Thoughts right now: creating 2-4 graphics, having a data tab, and some drop-down options. Keep it simple. 
+
+#### Webpage hosting 
+* Site created and running.
+* Finish the simulation and dashboard first!! 
