@@ -16,64 +16,12 @@ library(parallel)
 ```
 
 
-```{r parameters}
-
-# INTAKE_TIME <- rexp(1, 10)
-CONSULT_TIME <- 2
-ADMIN_TIME <- 10
-INTER_ARRIVAL_TIME <- 3
-SIM_RUN_TIME <- 1000
-
-```
-
-
-```{r trajectory}
-
-set.seed(1)
-
-patient <- trajectory("patients' path") %>%
-  ## add an intake activity 
-  seize("nurse", 1) %>%
-  timeout(function() rnorm(1,12)) %>%
-  release("nurse", 1) %>%
-  ## add a consultation activity
-  seize("doctor", 1) %>%
-  timeout(CONSULT_TIME) %>%
-  release("doctor", 1) %>%
-  ## add a planning activity
-  seize("administration", 1) %>%
-  timeout(ADMIN_TIME) %>%
-  release("administration", 1)
-```
-
-```{r simmer}
-
-envs <- mclapply(c(1, 1), function(i) {
-  simmer("Clinic Sim") %>%
-    add_resource("nurse", 1) %>%
-    add_resource("doctor", 1) %>%
-    add_resource("administration", 1) %>%
-    add_generator("patient", patient,from_to(0, SIM_RUN_TIME, function() {INTER_ARRIVAL_TIME})) %>%
-    run(SIM_RUN_TIME) %>%
-    wrap()
-})
-
-
-```
-
-```{r}
-envs %>%
-  get_mon_arrivals()
-```
-
-
-
 ```{r, echo = FALSE, include = FALSE}
 
 
 
-# 1-rep version
-# env <- simmer("CLINIC_SIM")
+
+env <- simmer("CLINIC_SIM")
 
 INTAKE_TIME <- 10
 CONSULT_TIME <- 2
@@ -95,20 +43,20 @@ patient <- trajectory("patients' path") %>%
   timeout(ADMIN_TIME) %>%
   release("administration", 1)
 
-# mclapply(c(3934943, 10005, 77723, 234234),  function(the_seed) {
-#   set.seed(42)
-#   
-#   env %>%
-#     add_resource("nurse", 1) %>%
-#     add_resource("doctor", 1) %>%
-#     add_resource("administration", 1) %>%
-#     add_generator("patient", patient, from_to(0, SIM_RUN_TIME, function() {INTER_ARRIVAL_TIME}))
-#   
-#   env %>%
-#     run(1000) %>%
-#     now()
-#   
-# }) %>% unlist()
+mclapply(c(3934943, 10005, 77723, 234234),  function(the_seed) {
+  set.seed(42)
+  
+  env %>%
+    add_resource("nurse", 1) %>%
+    add_resource("doctor", 1) %>%
+    add_resource("administration", 1) %>%
+    add_generator("patient", patient, from_to(0, SIM_RUN_TIME, function() {INTER_ARRIVAL_TIME}))
+  
+  env %>%
+    run(1000) %>%
+    now()
+  
+}) %>% unlist()
 
 mon_arrivals <- get_mon_arrivals(env)
 mon_resources <- get_mon_resources(env)

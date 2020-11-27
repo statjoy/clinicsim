@@ -1,0 +1,22 @@
+Commiting changes to git
+
+# Navigate to project in Git Command Line
+
+1. Open Git command line
+2. cd Documents/Projects/clinicsim
+
+
+## If R breaks down for committing changes
+
+0. Error messagea when you do git add *
+"Another git process seems to be running..."
+1. rm -f .git/index.lock
+2. git reset
+3. git status 
+
+## Committing and pushing changes
+1. git add * 
+2. git commit -a 
+3. A VS file will pop up, add a comment, save and exit. 
+3. git status
+4. git push
